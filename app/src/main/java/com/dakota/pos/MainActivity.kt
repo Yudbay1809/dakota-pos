@@ -119,6 +119,18 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        val staffViewModel = remember(session.userId) {
+                            com.dakota.pos.ui.staff.StaffViewModel(
+                                staffAttendanceRepository = app.staffAttendanceRepository,
+                                recordStaffAttendanceUseCase = app.recordStaffAttendanceUseCase,
+                                syncBiometricDeviceUseCase = app.syncBiometricDeviceUseCase,
+                                calculateStaffPayrollUseCase = app.calculateStaffPayrollUseCase,
+                                saveStaffPayrollUseCase = app.saveStaffPayrollUseCase,
+                                generatePaySlipReceiptUseCase = app.generatePaySlipReceiptUseCase,
+                                printer = app.printer
+                            )
+                        }
+
                         PosScreen(
                             viewModel = posViewModel,
                             session = session,
@@ -128,6 +140,7 @@ class MainActivity : ComponentActivity() {
                             shiftViewModel = shiftViewModel,
                             kdsViewModel = kdsViewModel,
                             financeViewModel = financeViewModel,
+                            staffViewModel = staffViewModel,
                             onLogout = { authViewModel.logout() }
                         )
                     }

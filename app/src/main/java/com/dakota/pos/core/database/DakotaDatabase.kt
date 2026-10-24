@@ -67,9 +67,11 @@ import com.dakota.pos.data.local.entity.UserEntity
         com.dakota.pos.data.local.entity.KitchenOrderEntity::class,
         com.dakota.pos.data.local.entity.KitchenOrderItemEntity::class,
         com.dakota.pos.data.local.entity.StationConfigEntity::class,
-        com.dakota.pos.data.local.entity.OperatingExpenseEntity::class
+        com.dakota.pos.data.local.entity.OperatingExpenseEntity::class,
+        com.dakota.pos.data.local.entity.StaffAttendanceEntity::class,
+        com.dakota.pos.data.local.entity.StaffPayrollEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
@@ -92,6 +94,8 @@ abstract class DakotaDatabase : RoomDatabase() {
     abstract fun kitchenOrderDao(): com.dakota.pos.data.local.dao.KitchenOrderDao
     abstract fun stationConfigDao(): com.dakota.pos.data.local.dao.StationConfigDao
     abstract fun operatingExpenseDao(): com.dakota.pos.data.local.dao.OperatingExpenseDao
+    abstract fun staffAttendanceDao(): com.dakota.pos.data.local.dao.StaffAttendanceDao
+    abstract fun staffPayrollDao(): com.dakota.pos.data.local.dao.StaffPayrollDao
 
     companion object {
         @Volatile

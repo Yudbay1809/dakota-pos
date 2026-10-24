@@ -138,6 +138,7 @@ fun PosScreen(
     shiftViewModel: com.dakota.pos.ui.shift.ShiftViewModel? = null,
     kdsViewModel: com.dakota.pos.ui.kds.KdsViewModel? = null,
     financeViewModel: com.dakota.pos.ui.finance.FinanceViewModel? = null,
+    staffViewModel: com.dakota.pos.ui.staff.StaffViewModel? = null,
     onLogout: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -147,6 +148,7 @@ fun PosScreen(
     var showShiftManagement by remember { mutableStateOf(false) }
     var showKds by remember { mutableStateOf(false) }
     var showFinance by remember { mutableStateOf(false) }
+    var showStaffPayroll by remember { mutableStateOf(false) }
     val canViewHpp = session.role == UserRole.OWNER || session.permissions.contains(Permission.VIEW_HPP)
 
     Box(modifier = Modifier.fillMaxSize().background(PosBackgroundDark)) {
@@ -168,6 +170,7 @@ fun PosScreen(
                     onOpenShiftManagement = { showShiftManagement = true },
                     onOpenKds = { showKds = true },
                     onOpenFinance = { showFinance = true },
+                    onOpenStaffPayroll = { showStaffPayroll = true },
                     onLogout = onLogout
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -393,6 +396,34 @@ fun PosScreen(
             }
         }
 
+        // Staff Attendance & Biometric Payroll Dialog (Phase 13)
+        if (showStaffPayroll && staffViewModel != null) {
+            Dialog(
+                onDismissRequest = { showStaffPayroll = false },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color(0xFF1A1A2E)
+                ) {
+                    Box {
+                        com.dakota.pos.ui.staff.StaffAttendancePayrollScreen(
+                            viewModel = staffViewModel
+                        )
+                        IconButton(
+                            onClick = { showStaffPayroll = false },
+                            modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)
+                        ) {
+                            Icon(Icons.Default.Close, "Tutup", tint = Color.White)
+                        }
+                    }
+                }
+            }
+        }
+
         // Snackbar for messages
         uiState.checkoutMessage?.let { message ->
             if (!uiState.showCheckoutSuccess) {
@@ -432,6 +463,7 @@ private fun PosTopBar(
     onOpenShiftManagement: () -> Unit,
     onOpenKds: () -> Unit,
     onOpenFinance: () -> Unit,
+    onOpenStaffPayroll: () -> Unit = {},
     onLogout: () -> Unit
 ) {
     Row(
@@ -519,6 +551,20 @@ private fun PosTopBar(
                         Icon(Icons.Default.Calculate, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
                         Text("Laba & Keuangan", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // Staff Attendance & Payroll button (Phase 13)
+                    OutlinedButton(
+                        onClick = onOpenStaffPayroll,
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, Color(0xFFA855F7).copy(alpha = 0.6f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFA855F7)),
+                        modifier = Modifier.height(38.dp)
+                    ) {
+                        Icon(Icons.Default.Receipt, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Staf & Payroll", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                 }

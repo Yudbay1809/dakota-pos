@@ -228,6 +228,33 @@ class DakotaApp : Application() {
         com.dakota.pos.domain.usecase.finance.GetOperatingExpensesUseCase(financeRepository)
     }
 
+    // Staff Attendance & Biometric Payroll (Phase 13)
+    val staffAttendanceRepository: com.dakota.pos.domain.repository.StaffAttendanceRepository by lazy {
+        com.dakota.pos.data.repository.StaffAttendanceRepositoryImpl(
+            staffAttendanceDao = database.staffAttendanceDao(),
+            staffPayrollDao = database.staffPayrollDao(),
+            userDao = database.userDao()
+        )
+    }
+    val recordStaffAttendanceUseCase by lazy {
+        com.dakota.pos.domain.usecase.staff.RecordStaffAttendanceUseCase(staffAttendanceRepository)
+    }
+    val syncBiometricDeviceUseCase by lazy {
+        com.dakota.pos.domain.usecase.staff.SyncBiometricDeviceUseCase(staffAttendanceRepository)
+    }
+    val calculateStaffPayrollUseCase by lazy {
+        com.dakota.pos.domain.usecase.staff.CalculateStaffPayrollUseCase(staffAttendanceRepository)
+    }
+    val saveStaffPayrollUseCase by lazy {
+        com.dakota.pos.domain.usecase.staff.SaveStaffPayrollUseCase(
+            staffAttendanceRepository = staffAttendanceRepository,
+            operatingExpenseDao = database.operatingExpenseDao()
+        )
+    }
+    val generatePaySlipReceiptUseCase by lazy {
+        com.dakota.pos.domain.usecase.staff.GeneratePaySlipReceiptUseCase()
+    }
+
     override fun onCreate() {
         super.onCreate()
     }
