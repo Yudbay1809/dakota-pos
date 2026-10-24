@@ -6,6 +6,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -100,13 +102,13 @@ fun PaymentDialog(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.68f)
-                .fillMaxHeight(0.88f),
+                .fillMaxWidth(0.82f)
+                .fillMaxHeight(0.96f),
             shape = RoundedCornerShape(20.dp),
             color = PosSurfaceDark,
             border = BorderStroke(1.dp, PosBorderDark)
         ) {
-            Column(modifier = Modifier.padding(24.dp)) {
+            Column(modifier = Modifier.padding(16.dp)) {
                 // Header
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -135,9 +137,9 @@ fun PaymentDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 HorizontalDivider(color = PosBorderDark)
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Error Banner if any
                 if (!errorMessage.isNullOrBlank()) {
@@ -265,7 +267,8 @@ fun PaymentDialog(
                         Column(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(20.dp)
+                                .verticalScroll(rememberScrollState())
+                                .padding(14.dp)
                         ) {
                             // Total Tagihan Header
                             Surface(
@@ -329,7 +332,7 @@ fun PaymentDialog(
                                 }
                             }
 
-                            Spacer(modifier = Modifier.weight(1f))
+                            Spacer(modifier = Modifier.height(16.dp))
 
                             // Bottom Confirm Button
                             val isConfirmEnabled = when (selectedMethod) {

@@ -14,8 +14,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -467,101 +469,113 @@ private fun PosTopBar(
             RoleBadge(role = session.role)
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            // KDS Barista button (Phase 11)
-            OutlinedButton(
-                onClick = onOpenKds,
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color(0xFFD97706).copy(alpha = 0.6f)),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD97706)),
-                modifier = Modifier.height(38.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f, fill = false)
+        ) {
+            // Feature action buttons with horizontal scroll
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .weight(1f, fill = false)
+                    .horizontalScroll(rememberScrollState())
             ) {
-                Icon(Icons.Default.Receipt, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("KDS Barista", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-
-            // Shift & Cash Management button (accessible by all cashiers & managers)
-            OutlinedButton(
-                onClick = onOpenShiftManagement,
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(1.dp, Color(0xFF00C896).copy(alpha = 0.5f)),
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF00C896)),
-                modifier = Modifier.height(38.dp)
-            ) {
-                Icon(Icons.Default.Receipt, contentDescription = null, modifier = Modifier.size(16.dp))
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Shift & Kas", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
-            }
-            Spacer(modifier = Modifier.width(8.dp))
-
-            if (canViewHpp) {
+                // KDS Barista button (Phase 11)
                 OutlinedButton(
-                    onClick = onOpenFinance,
+                    onClick = onOpenKds,
                     shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, Color(0xFF10B981).copy(alpha = 0.6f)),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF10B981)),
-                    modifier = Modifier.height(38.dp)
-                ) {
-                    Icon(Icons.Default.Calculate, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Laba & Keuangan", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-
-            if (canViewHpp) {
-                OutlinedButton(
-                    onClick = onOpenRecipeManagement,
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, CoffeeCaramel.copy(alpha = 0.5f)),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = CoffeeCaramel),
-                    modifier = Modifier.height(38.dp)
-                ) {
-                    Icon(Icons.Default.Calculate, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text("Resep & HPP", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
-                }
-                Spacer(modifier = Modifier.width(8.dp))
-            }
-
-            if (canViewHpp) {
-                OutlinedButton(
-                    onClick = onOpenInventory,
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, Color(0xFF448AFF).copy(alpha = 0.5f)),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF448AFF)),
+                    border = BorderStroke(1.dp, Color(0xFFD97706).copy(alpha = 0.6f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFD97706)),
                     modifier = Modifier.height(38.dp)
                 ) {
                     Icon(Icons.Default.Receipt, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Inventory", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    Text("KDS Barista", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-            }
 
-            if (canViewHpp) {
+                // Shift & Cash Management button (accessible by all cashiers & managers)
                 OutlinedButton(
-                    onClick = onOpenPurchasing,
+                    onClick = onOpenShiftManagement,
                     shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, Color(0xFFFFD54F).copy(alpha = 0.5f)),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFFD54F)),
+                    border = BorderStroke(1.dp, Color(0xFF00C896).copy(alpha = 0.5f)),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF00C896)),
                     modifier = Modifier.height(38.dp)
                 ) {
-                    Icon(Icons.Default.ShoppingCart, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Icon(Icons.Default.Receipt, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Pengadaan", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    Text("Shift & Kas", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
                 }
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+
+                if (canViewHpp) {
+                    OutlinedButton(
+                        onClick = onOpenFinance,
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, Color(0xFF10B981).copy(alpha = 0.6f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF10B981)),
+                        modifier = Modifier.height(38.dp)
+                    ) {
+                        Icon(Icons.Default.Calculate, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Laba & Keuangan", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                if (canViewHpp) {
+                    OutlinedButton(
+                        onClick = onOpenRecipeManagement,
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, CoffeeCaramel.copy(alpha = 0.5f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = CoffeeCaramel),
+                        modifier = Modifier.height(38.dp)
+                    ) {
+                        Icon(Icons.Default.Calculate, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Resep & HPP", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                if (canViewHpp) {
+                    OutlinedButton(
+                        onClick = onOpenInventory,
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, Color(0xFF448AFF).copy(alpha = 0.5f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF448AFF)),
+                        modifier = Modifier.height(38.dp)
+                    ) {
+                        Icon(Icons.Default.Receipt, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Inventory", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                if (canViewHpp) {
+                    OutlinedButton(
+                        onClick = onOpenPurchasing,
+                        shape = RoundedCornerShape(8.dp),
+                        border = BorderStroke(1.dp, Color(0xFFFFD54F).copy(alpha = 0.5f)),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFFD54F)),
+                        modifier = Modifier.height(38.dp)
+                    ) {
+                        Icon(Icons.Default.ShoppingCart, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Pengadaan", style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold))
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
             }
 
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = session.username,
                 style = MaterialTheme.typography.bodyMedium,
                 color = PosTextSecondaryDark
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             IconButton(
                 onClick = onLogout,
                 modifier = Modifier

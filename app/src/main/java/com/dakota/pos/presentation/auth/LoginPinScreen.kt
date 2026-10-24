@@ -113,35 +113,43 @@ fun LoginPinScreen(
             modifier = Modifier
                 .weight(0.62f)
                 .fillMaxHeight()
-                .padding(32.dp),
+                .padding(horizontal = 24.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             val selectedUser = uiState.selectedUser
             if (selectedUser != null) {
-                Icon(
-                    imageVector = Icons.Default.Lock,
-                    contentDescription = "PIN Lock",
-                    tint = CoffeeCaramel,
-                    modifier = Modifier.size(36.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = selectedUser.fullName,
-                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                    color = PosTextPrimaryDark
-                )
-                RoleBadge(role = selectedUser.role)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "PIN Lock",
+                        tint = CoffeeCaramel,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Text(
+                        text = selectedUser.fullName,
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                        color = PosTextPrimaryDark
+                    )
+                    RoleBadge(role = selectedUser.role)
+                }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // PIN Dots Indicator
+                val maxDots = when (selectedUser.role) {
+                    UserRole.CASHIER, UserRole.BARISTA -> 4
+                    else -> 6
+                }
                 PinDotsIndicator(
                     pinLength = uiState.enteredPin.length,
-                    maxDots = if (selectedUser.role == UserRole.CASHIER) 4 else 6
+                    maxDots = maxDots
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 // Error / Loading Message
                 AnimatedVisibility(
@@ -152,20 +160,20 @@ fun LoginPinScreen(
                     Text(
                         text = uiState.errorMessage.orEmpty(),
                         color = StatusError,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                         textAlign = TextAlign.Center
                     )
                 }
 
                 if (uiState.isLoading) {
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
                     CircularProgressIndicator(
                         color = CoffeeCaramel,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Numeric Keypad
                 NumericKeypad(
@@ -265,18 +273,18 @@ fun PinDotsIndicator(
     maxDots: Int
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         for (i in 0 until maxDots) {
             val isFilled = i < pinLength
             Box(
                 modifier = Modifier
-                    .size(16.dp)
+                    .size(12.dp)
                     .clip(CircleShape)
                     .background(if (isFilled) CoffeeCaramel else Color.Transparent)
                     .border(
-                        2.dp,
+                        1.5.dp,
                         if (isFilled) CoffeeCaramel else PosBorderDark,
                         CircleShape
                     )
@@ -299,12 +307,12 @@ fun NumericKeypad(
     )
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         buttons.forEach { row ->
             Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 row.forEach { char ->
                     KeypadButton(
@@ -338,7 +346,7 @@ fun KeypadButton(
 
     Box(
         modifier = Modifier
-            .size(72.dp)
+            .size(52.dp)
             .clip(CircleShape)
             .background(buttonBg)
             .border(1.dp, PosBorderDark, CircleShape)
@@ -350,13 +358,13 @@ fun KeypadButton(
                 imageVector = Icons.AutoMirrored.Filled.Backspace,
                 contentDescription = "Backspace",
                 tint = contentColor,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(20.dp)
             )
         } else {
             Text(
                 text = char.toString(),
                 style = MaterialTheme.typography.titleLarge.copy(
-                    fontSize = 26.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold
                 ),
                 color = contentColor

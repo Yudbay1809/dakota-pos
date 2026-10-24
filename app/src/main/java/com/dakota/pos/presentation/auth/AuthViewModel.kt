@@ -43,15 +43,15 @@ class AuthViewModel(
     }
 
     fun onPinDigitEntered(digit: Char) {
+        val selectedRole = _uiState.value.selectedUser?.role?.name
+        val targetLength = if (selectedRole == "CASHIER" || selectedRole == "BARISTA") 4 else 6
         val currentPin = _uiState.value.enteredPin
-        if (currentPin.length >= 6) return
+        if (currentPin.length >= targetLength) return
         val newPin = currentPin + digit
         _uiState.update { it.copy(enteredPin = newPin, errorMessage = null) }
 
-        // Auto submit if 4 or 6 digits matching user
-        if (newPin.length == 4 && _uiState.value.selectedUser?.role?.name == "CASHIER") {
-            submitPin(newPin)
-        } else if (newPin.length == 6) {
+        // Auto submit if target digits matching user
+        if (newPin.length == targetLength) {
             submitPin(newPin)
         }
     }
