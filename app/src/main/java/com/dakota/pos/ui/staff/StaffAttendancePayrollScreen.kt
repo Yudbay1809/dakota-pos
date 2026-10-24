@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -416,7 +418,8 @@ private fun PayrollTabContent(
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(12.dp))
                 .background(PosSurfaceDark)
-                .padding(16.dp)
+                .padding(14.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = "Pilih Karyawan Kafe",
@@ -427,11 +430,8 @@ private fun PayrollTabContent(
             Spacer(modifier = Modifier.height(10.dp))
 
             // Staff Selection List
-            LazyColumn(
-                modifier = Modifier.weight(0.5f),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                items(uiState.salaryRates) { staff ->
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                uiState.salaryRates.forEach { staff ->
                     val isSelected = staff.userId == uiState.selectedUserId
                     Row(
                         modifier = Modifier
@@ -458,7 +458,7 @@ private fun PayrollTabContent(
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-            Divider(color = PosBorderDark)
+            HorizontalDivider(color = PosBorderDark)
             Spacer(modifier = Modifier.height(12.dp))
 
             // Biometric Audit Mini-Dashboard
@@ -487,8 +487,8 @@ private fun PayrollTabContent(
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(12.dp))
                 .background(PosSurfaceDark)
-                .padding(20.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Column {
                 Row(
@@ -534,7 +534,7 @@ private fun PayrollTabContent(
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
-                    Divider(color = PosBorderDark, thickness = 1.dp)
+                    HorizontalDivider(color = PosBorderDark, thickness = 1.dp)
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Net Salary
@@ -624,46 +624,39 @@ private fun QuickScanDialog(
     onDismiss: () -> Unit,
     onConfirm: (userId: String, type: AttendanceType) -> Unit
 ) {
-    var selectedUserId by remember { mutableStateOf(salaryRates.firstOrNull()?.userId ?: "USR-001") }
+    var selectedUserId by remember { mutableStateOf(salaryRates.firstOrNull()?.userId ?: "usr-barista-01") }
     var selectedType by remember { mutableStateOf(AttendanceType.IN) }
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = Color(0xFF1E2229),
-            modifier = Modifier.width(360.dp).padding(16.dp)
+            modifier = Modifier.width(460.dp).padding(12.dp)
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text("Simulasi Pemindaian Sidik Jari", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                Spacer(modifier = Modifier.height(6.dp))
+                Spacer(modifier = Modifier.height(4.dp))
                 Text("Sentuhkan jari pada sensor biometrik", color = PosTextSecondaryDark, fontSize = 12.sp)
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Sensor Fingerprint Icon
-                Box(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(CircleShape)
-                        .background(CoffeeCaramel.copy(alpha = 0.2f))
-                        .border(2.dp, CoffeeCaramel, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(Icons.Default.ThumbUp, contentDescription = null, tint = CoffeeCaramel, modifier = Modifier.size(32.dp))
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Staff Picker
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    Text("Pilih Karyawan", color = PosTextSecondaryDark, fontSize = 12.sp)
+                    Text("Pilih Karyawan:", color = PosTextSecondaryDark, fontSize = 12.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     salaryRates.forEach { staff ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(if (selectedUserId == staff.userId) PosSurfaceDark else Color.Transparent)
                                 .clickable { selectedUserId = staff.userId }
-                                .padding(vertical = 4.dp),
+                                .padding(vertical = 4.dp, horizontal = 6.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             RadioButton(
@@ -676,7 +669,7 @@ private fun QuickScanDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 // Type IN vs OUT
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -703,7 +696,7 @@ private fun QuickScanDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 // Actions
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -715,7 +708,7 @@ private fun QuickScanDialog(
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = CoffeeCaramel)
                     ) {
-                        Text("Scan Jari", color = Color.Black, fontWeight = FontWeight.Bold)
+                        Text("Scan Jari Sekarang", color = Color.Black, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -729,7 +722,7 @@ private fun ManualAdjustmentDialog(
     onDismiss: () -> Unit,
     onConfirm: (userId: String, type: AttendanceType, notes: String) -> Unit
 ) {
-    var selectedUserId by remember { mutableStateOf(salaryRates.firstOrNull()?.userId ?: "USR-001") }
+    var selectedUserId by remember { mutableStateOf(salaryRates.firstOrNull()?.userId ?: "usr-barista-01") }
     var selectedType by remember { mutableStateOf(AttendanceType.IN) }
     var notesInput by remember { mutableStateOf("Lupa scan sidik jari saat datang") }
 
@@ -737,13 +730,17 @@ private fun ManualAdjustmentDialog(
         Surface(
             shape = RoundedCornerShape(16.dp),
             color = Color(0xFF1E2229),
-            modifier = Modifier.width(380.dp).padding(16.dp)
+            modifier = Modifier.width(440.dp).padding(12.dp)
         ) {
-            Column {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
                 Text("Koreksi Presensi Manual oleh Manager", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
                 Text("Digunakan jika staf lupa scan atau mesin absen offline", color = PosTextSecondaryDark, fontSize = 11.sp)
 
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text("Pilih Karyawan:", color = PosTextSecondaryDark, fontSize = 12.sp)
                 salaryRates.forEach { staff ->
@@ -785,7 +782,7 @@ private fun ManualAdjustmentDialog(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text("Catatan Verifikasi Manager:", color = PosTextSecondaryDark, fontSize = 12.sp)
                 OutlinedTextField(
@@ -800,7 +797,7 @@ private fun ManualAdjustmentDialog(
                     )
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedButton(onClick = onDismiss, modifier = Modifier.weight(1f)) {
@@ -854,7 +851,9 @@ private fun PaySlipReceiptDialog(
                     shape = RoundedCornerShape(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heightIn(max = 280.dp)
                         .padding(horizontal = 8.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Text(
                         text = receiptText,
